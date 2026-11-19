@@ -1,0 +1,51 @@
+date,client_name,job_type,revenue,labor_hours,hourly_labor_rate,material_cost,overhead_allocation
+2026-08-01,Blue Line Logistics,Repair,1245.00,5.00,73.50,428.69,143.38
+2026-08-01,Pine Hollow Apartments,Repair,1475.00,3.50,79.00,640.19,184.35
+2026-08-04,Northgate Fitness,Maintenance,480.00,3.75,71.50,49.58,49.53
+2026-08-05,Lakeside Veterinary,Repair,1035.00,4.25,78.00,105.86,133.64
+2026-08-07,Harborview Property Mgmt,Maintenance,685.00,3.50,67.00,89.16,66.52
+2026-08-08,Casa Verde Restaurant,Installation,2130.00,7.75,81.00,912.41,224.37
+2026-08-08,Mesa Verde Cafe,Repair,795.00,3.75,69.00,102.93,91.60
+2026-08-13,Willow & Sage Salon,Repair,1120.00,5.75,69.00,255.88,98.39
+2026-08-13,Mesa Verde Cafe,Installation,3805.00,9.50,90.50,1545.93,421.45
+2026-08-15,FleetWorks Trucking,Installation,2825.00,7.25,84.50,1020.32,305.68
+2026-08-18,Mesa Verde Cafe,Repair,970.00,2.50,76.50,592.31,116.07
+2026-08-20,Casa Verde Restaurant,Installation,2920.00,13.50,85.00,1381.55,252.10
+2026-08-24,Lakeside Veterinary,Installation,4295.00,11.25,71.00,960.18,542.13
+2026-08-26,Bright Path Montessori,Maintenance,325.00,2.25,61.50,80.14,39.90
+2026-08-27,Willow & Sage Salon,Maintenance,390.00,2.00,66.00,138.12,46.61
+2026-08-27,Ironclad Auto Shop,Repair,960.00,2.00,84.50,589.22,107.39
+2026-08-29,Bright Path Montessori,Maintenance,885.00,3.75,74.50,94.32,111.38
+2026-08-30,Mesa Verde Cafe,Installation,1900.00,10.25,75.50,862.63,225.91
+2026-09-02,Casa Verde Restaurant,Repair,1025.00,8.00,75.00,173.96,121.89
+2026-09-03,Harborview Property Mgmt,Maintenance,345.00,2.25,68.50,155.49,36.05
+2026-09-04,Harborview Property Mgmt,Installation,2405.00,12.75,71.00,553.79,205.98
+2026-09-05,Casa Verde Restaurant,Maintenance,355.00,2.75,65.00,5.98,41.12
+2026-09-08,Ironclad Auto Shop,Maintenance,275.00,2.50,61.50,15.27,32.41
+2026-09-10,Ironclad Auto Shop,Repair,780.00,4.00,67.50,212.14,63.21
+2026-09-11,Sterling Law Group,Maintenance,610.00,3.00,61.00,151.63,53.09
+2026-09-14,Willow & Sage Salon,Maintenance,445.00,2.75,67.50,33.79,41.59
+2026-09-14,Cedar Ridge Dental,Repair,1270.00,6.25,77.50,362.70,119.50
+2026-09-15,Lakeside Veterinary,Repair,1650.00,6.75,81.50,302.24,202.91
+2026-09-17,Blue Line Logistics,Repair,575.00,2.25,74.00,74.81,65.11
+2026-09-17,Summit View Offices,Repair,910.00,3.75,71.00,364.47,89.15
+2026-09-22,Harborview Property Mgmt,Installation,2455.00,13.25,84.50,610.79,288.19
+2026-09-23,Sterling Law Group,Installation,4630.00,12.50,85.00,666.73,544.72
+2026-09-23,Mesa Verde Cafe,Maintenance,380.00,2.50,73.00,65.62,46.21
+2026-09-24,Northgate Fitness,Repair,1505.00,5.25,66.00,606.00,121.60
+2026-09-26,Blue Line Logistics,Repair,1590.00,8.00,74.50,149.66,173.62
+2026-09-27,Blue Line Logistics,Maintenance,370.00,2.75,67.00,62.44,44.24
+2026-10-02,Summit View Offices,Repair,1115.00,6.25,76.50,295.66,107.41
+2026-10-02,Pine Hollow Apartments,Installation,6100.00,15.75,80.50,1388.19,766.49
+2026-10-04,Bright Path Montessori,Repair,2280.00,6.75,73.50,329.18,294.42
+2026-10-07,Summit View Offices,Installation,2620.00,12.25,70.50,1375.17,273.42
+2026-10-09,Cedar Ridge Dental,Maintenance,510.00,3.75,73.50,93.61,50.91
+2026-10-10,Cedar Ridge Dental,Maintenance,500.00,1.50,57.50,135.58,44.96
+2026-10-13,Northgate Fitness,Installation,2345.00,6.50,76.00,1068.56,258.47
+2026-10-17,Pine Hollow Apartments,Repair,1000.00,7.00,75.50,346.60,129.71
+2026-10-18,FleetWorks Trucking,Repair,1595.00,5.50,76.00,505.93,200.05
+2026-10-18,Harborview Property Mgmt,Maintenance,495.00,1.75,70.00,102.93,61.90
+2026-10-22,Sterling Law Group,Maintenance,230.00,1.50,67.50,104.94,27.72
+2026-10-25,Ironclad Auto Shop,Maintenance,280.00,1.75,72.00,123.56,31.16
+2026-10-28,Ironclad Auto Shop,Repair,975.00,6.00,66.50,252.21,102.21
+2026-10-29,Sterling Law Group,Maintenance,325.00,3.00,60.50,124.72,29.11

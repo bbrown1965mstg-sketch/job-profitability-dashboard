@@ -1,0 +1,9 @@
+# Local environment & artifacts
+.venv/
+__pycache__/
+*.pyc
+
+# Regenerable via ingest.py
+*.db
+
+.DS_Store
