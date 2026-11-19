@@ -1,0 +1,10 @@
+[package]
+name = "dashboard-renderer"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+feetrender = { git = "https://github.com/Br1skyy/feetrender" }
+
+[profile.release]
+opt-level = 3
