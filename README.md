@@ -12,6 +12,8 @@ Local business intelligence dashboard for service jobs — Streamlit + SQLite, d
 
 ## Run
 
+Requires Python 3.9+ (package versions are pinned in `requirements.txt`).
+
 ```bash
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
