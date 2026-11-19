@@ -7,3 +7,9 @@ __pycache__/
 *.db
 
 .DS_Store
+
+# Rust renderer build artifacts (renderer/dashboard.png is regenerable;
+# the committed snapshot lives at docs/dashboard.png)
+renderer/target/
+renderer/dashboard.png
+/dashboard.png

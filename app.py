@@ -12,33 +12,108 @@ import streamlit as st
 from plotly.subplots import make_subplots
 
 DB_PATH = Path(__file__).with_name("business_intel.db")
-MARGIN_ALERT_PCT = 15.0
+MARGIN_ALERT_PCT = 15.0  # default; live-adjustable in the sidebar
 
 COLORS = {
     "revenue": "#38BDF8",
     "expenses": "#FB7185",
     "profit": "#34D399",
+    "margin": "#A78BFA",
     "labor": "#F59E0B",
     "text": "#E6EDF3",
-    "grid": "#232A36",
+    "dim": "#9BA6B4",
+    "grid": "#1B2130",
+    "border": "#232A36",
+    "card": "#12161F",
 }
 
-CSS = """
+CSS = f"""
 <style>
-.block-container { padding-top: 1.4rem; max-width: 1280px; }
-div[data-testid="stMetric"] {
-    background: linear-gradient(180deg, #171C26 0%, #12161F 100%);
-    border: 1px solid #232A36; border-radius: 14px;
-    padding: 16px 18px 12px 18px;
-}
-div[data-testid="stMetricLabel"] p { color: #9BA6B4 !important; font-size: 0.85rem; }
-div[data-testid="stMetricValue"] { font-weight: 700; }
-.section-title {
-    font-size: 1.05rem; font-weight: 700; color: #E6EDF3;
-    border-left: 4px solid #34D399; padding-left: 0.65rem;
-    margin: 1.6rem 0 0.7rem 0;
-}
-div[data-testid="stDataFrame"] { border: 1px solid #232A36; border-radius: 10px; }
+    .stApp {{ background: linear-gradient(180deg, #0B0F17 0%, #0D1119 100%); }}
+    .block-container {{ padding-top: 1.8rem; padding-bottom: 3rem; max-width: 1280px; }}
+    .stApp h1 {{ font-weight: 800; letter-spacing: -0.02em; }}
+
+    /* ---- sidebar ---- */
+    section[data-testid="stSidebar"] {{
+        background: #0E131C;
+        border-right: 1px solid {COLORS["border"]};
+    }}
+    .sidebar-logo {{
+        display: flex; align-items: center; gap: 0.6rem;
+        font-size: 1.15rem; font-weight: 800; color: {COLORS["text"]};
+        padding: 0.5rem 0 0.1rem 0;
+    }}
+    .sidebar-logo .logo-chip {{
+        background: linear-gradient(135deg, #34D399 0%, #38BDF8 100%);
+        width: 2.1rem; height: 2.1rem; border-radius: 9px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.1rem;
+    }}
+
+    /* ---- header chips ---- */
+    .header-chips {{ display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: -0.2rem; }}
+    .chip {{
+        background: {COLORS["card"]}; border: 1px solid {COLORS["border"]};
+        color: {COLORS["dim"]}; border-radius: 999px;
+        padding: 0.18rem 0.7rem; font-size: 0.78rem; font-weight: 600;
+    }}
+    .chip b {{ color: {COLORS["text"]}; }}
+
+    /* ---- section titles ---- */
+    .section-title {{
+        display: flex; align-items: center; gap: 0.65rem;
+        font-size: 1.05rem; font-weight: 700; color: {COLORS["text"]};
+        margin: 2.0rem 0 0.8rem 0;
+    }}
+    .section-title .num {{
+        background: linear-gradient(135deg, #34D399 0%, #38BDF8 100%);
+        color: #07121B; font-size: 0.72rem; font-weight: 800;
+        border-radius: 7px; padding: 0.14rem 0.42rem;
+    }}
+
+    /* ---- KPI cards ---- */
+    .kpi-card {{
+        position: relative; overflow: hidden;
+        background: linear-gradient(180deg, #171C26 0%, {COLORS["card"]} 100%);
+        border: 1px solid {COLORS["border"]}; border-radius: 14px;
+        padding: 1.0rem 1.1rem 0.9rem 1.3rem;
+    }}
+    .kpi-accent {{
+        position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+    }}
+    .kpi-top {{
+        display: flex; justify-content: space-between; align-items: center; gap: 0.4rem;
+    }}
+    .kpi-label {{
+        color: {COLORS["dim"]}; font-size: 0.8rem; font-weight: 600;
+        text-transform: uppercase; letter-spacing: 0.05em;
+    }}
+    .kpi-value {{
+        color: {COLORS["text"]}; font-size: 1.75rem; font-weight: 800;
+        font-variant-numeric: tabular-nums; margin-top: 0.35rem;
+    }}
+    .kpi-sub {{ color: #6E7A8A; font-size: 0.72rem; margin-top: 0.3rem; }}
+    .kpi-delta {{
+        font-size: 0.72rem; font-weight: 700; border-radius: 999px; padding: 0.1rem 0.45rem;
+    }}
+    .kpi-delta.up {{ color: #34D399; background: rgba(52, 211, 153, 0.12); }}
+    .kpi-delta.down {{ color: #FB7185; background: rgba(251, 113, 133, 0.12); }}
+
+    /* ---- banners ---- */
+    .dash-banner {{
+        border-radius: 12px; padding: 0.8rem 1.1rem; font-size: 0.92rem;
+        margin: 0.6rem 0 0.4rem 0; border: 1px solid;
+    }}
+    .dash-banner.alert {{ background: rgba(251, 113, 133, 0.08); border-color: rgba(251, 113, 133, 0.35); }}
+    .dash-banner.ok {{ background: rgba(52, 211, 153, 0.07); border-color: rgba(52, 211, 153, 0.30); }}
+
+    /* ---- tables & misc ---- */
+    div[data-testid="stDataFrame"] {{ border: 1px solid {COLORS["border"]}; border-radius: 10px; }}
+    .footer {{
+        color: #55617A; font-size: 0.75rem; text-align: center;
+        margin-top: 2.6rem; padding-top: 1rem;
+        border-top: 1px solid {COLORS["border"]};
+    }}
 </style>
 """
 
@@ -62,7 +137,7 @@ def style_fig(fig: go.Figure, height: int = 340) -> go.Figure:
         template="plotly_dark",
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
-        font=dict(color=COLORS["text"], family="Inter, Segoe UI, sans-serif"),
+        font=dict(color=COLORS["text"], family="Inter, Segoe UI, sans-serif", size=13),
         height=height,
         margin=dict(l=10, r=10, t=30, b=10),
         legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0),
@@ -72,6 +147,30 @@ def style_fig(fig: go.Figure, height: int = 340) -> go.Figure:
     return fig
 
 
+def fmt_delta(cur: float, prev: float, pct: bool = False) -> tuple[str, str]:
+    """Change vs the prior month → (direction class, chip html)."""
+    if prev == 0:
+        return "", ""
+    change = (cur - prev) / abs(prev) * 100
+    if abs(change) < 0.05:
+        return "", ""
+    arrow = "▲" if change > 0 else "▼"
+    cls = "up" if change > 0 else "down"
+    unit = "pp" if pct else "%"
+    return cls, f'<span class="kpi-delta {cls}">{arrow} {abs(change):.1f}{unit}</span>'
+
+
+def kpi_card(label: str, icon: str, value: str, accent: str, sub: str, delta_html: str) -> str:
+    return (
+        f'<div class="kpi-card">'
+        f'<div class="kpi-accent" style="background:{accent}"></div>'
+        f'<div class="kpi-top"><span class="kpi-label">{icon}&nbsp;{label}</span>{delta_html}</div>'
+        f'<div class="kpi-value">{value}</div>'
+        f'<div class="kpi-sub">{sub}</div>'
+        f'</div>'
+    )
+
+
 df = load_jobs()
 if df.empty:
     st.error("No jobs found in business_intel.db — run `python ingest.py` first.")
@@ -79,6 +178,12 @@ if df.empty:
 
 # ------------------------------------------------------------------ filters
 with st.sidebar:
+    st.markdown(
+        '<div class="sidebar-logo"><span class="logo-chip">📊</span>JobP&amp;L</div>',
+        unsafe_allow_html=True,
+    )
+    st.caption("Local BI for service jobs")
+    st.divider()
     st.header("⚙️ Filters")
     months = sorted(df["month"].unique())
     sel_months = st.multiselect(
@@ -89,7 +194,19 @@ with st.sidebar:
     )
     job_types = sorted(df["job_type"].unique())
     sel_types = st.multiselect("Job type", job_types, default=job_types)
-    st.button("🔄 Refresh data", on_click=st.cache_data.clear)
+    st.divider()
+    alert_pct = st.slider(
+        "Margin alert floor (%)",
+        min_value=5.0,
+        max_value=40.0,
+        value=MARGIN_ALERT_PCT,
+        step=0.5,
+        help=f"Jobs below this profit margin are flagged. Default: {MARGIN_ALERT_PCT:.0f}%.",
+    )
+    st.button("🔄 Refresh data", on_click=st.cache_data.clear, use_container_width=True)
+    if DB_PATH.exists():
+        kb = DB_PATH.stat().st_size / 1024
+        st.caption(f"📦 business_intel.db • {len(df)} jobs • {kb:.0f} KB")
 
 filtered = df[df["month"].isin(sel_months) & df["job_type"].isin(sel_types)].copy()
 if filtered.empty:
@@ -98,19 +215,25 @@ if filtered.empty:
 
 # ------------------------------------------------------------------ header
 st.title("📊 Job Profitability Dashboard")
-st.caption(
-    f"{len(filtered)} jobs • {filtered['date'].min():%b %d} – {filtered['date'].max():%b %d, %Y} "
-    "• all metrics computed live from SQLite"
+st.markdown(
+    f'<div class="header-chips">'
+    f'<span class="chip"><b>{len(filtered)}</b> jobs</span>'
+    f'<span class="chip"><b>{filtered["date"].min():%b %d}</b> – <b>{filtered["date"].max():%b %d, %Y}</b></span>'
+    f'<span class="chip">floor <b>{alert_pct:.0f}%</b> margin</span>'
+    f'<span class="chip">live from SQLite</span>'
+    f'</div>',
+    unsafe_allow_html=True,
 )
 
 # ------------------------------------------------------------ anomaly banner
-anomalies = filtered[filtered["profit_margin"] < MARGIN_ALERT_PCT].sort_values("profit_margin")
+anomalies = filtered[filtered["profit_margin"] < alert_pct].sort_values("profit_margin")
 if not anomalies.empty:
     leak = anomalies["net_profit"].sum()
-    st.error(
-        f"⚠️ **Anomaly alert — {len(anomalies)} job(s) below {MARGIN_ALERT_PCT:.0f}% profit margin.** "
-        f"Net result of these jobs: **${leak:,.0f}**. Review pricing, labor or material costs.",
-        icon="🚨",
+    st.markdown(
+        f'<div class="dash-banner alert">🚨 <b>Anomaly alert</b> — {len(anomalies)} job(s) below '
+        f'{alert_pct:.0f}% profit margin. Net result of these jobs: <b>${leak:,.0f}</b>. '
+        f"Review pricing, labor or material costs.</div>",
+        unsafe_allow_html=True,
     )
     show = anomalies.assign(
         date=anomalies["date"].dt.strftime("%b %d"),
@@ -124,7 +247,10 @@ if not anomalies.empty:
     with st.expander(f"View {len(anomalies)} flagged job(s)", expanded=False):
         st.dataframe(show.set_index("Date"), use_container_width=True)
 else:
-    st.success(f"✅ All jobs are at or above the {MARGIN_ALERT_PCT:.0f}% margin floor.", icon="✔️")
+    st.markdown(
+        f'<div class="dash-banner ok">✅ All jobs are at or above the {alert_pct:.0f}% margin floor.</div>',
+        unsafe_allow_html=True,
+    )
 
 # ------------------------------------------------------------------- KPIs
 total_revenue = filtered["revenue"].sum()
@@ -132,14 +258,58 @@ total_expense = filtered["total_expense"].sum()
 net_profit = filtered["net_profit"].sum()
 overall_margin = net_profit / total_revenue * 100 if total_revenue else 0.0
 
-k1, k2, k3, k4 = st.columns(4)
-k1.metric("💰 Total Revenue", f"${total_revenue:,.0f}")
-k2.metric("💸 Total Expenses", f"${total_expense:,.0f}")
-k3.metric("📈 Net Profit", f"${net_profit:,.0f}")
-k4.metric("🎯 Overall Margin", f"{overall_margin:.1f}%")
+# month-over-month deltas (last month in the filter vs the one before it)
+sel_months_sorted = sorted(filtered["month"].unique())
+if len(sel_months_sorted) >= 2:
+    m_last, m_prev = sel_months_sorted[-2:]
+
+    def _month_stat(month, col):
+        rows = filtered[filtered["month"] == month]
+        if col == "margin":
+            return rows["net_profit"].sum() / rows["revenue"].sum() * 100
+        return rows[col].sum()
+
+    d_rev = fmt_delta(_month_stat(m_last, "revenue"), _month_stat(m_prev, "revenue"))
+    d_exp = fmt_delta(_month_stat(m_last, "total_expense"), _month_stat(m_prev, "total_expense"))
+    d_pro = fmt_delta(_month_stat(m_last, "net_profit"), _month_stat(m_prev, "net_profit"))
+    d_mar = fmt_delta(_month_stat(m_last, "margin"), _month_stat(m_prev, "margin"), pct=True)
+    delta_note = "vs prior month"
+else:
+    d_rev = d_exp = d_pro = d_mar = ("", "")
+    delta_note = f"{len(sel_months_sorted)} month of data"
+
+k1, k2, k3, k4 = st.columns(4, gap="medium")
+with k1:
+    st.markdown(
+        kpi_card("Total Revenue", "💰", f"${total_revenue:,.0f}", COLORS["revenue"],
+                 f"{len(filtered)} jobs • {delta_note}", d_rev[1]),
+        unsafe_allow_html=True,
+    )
+with k2:
+    st.markdown(
+        kpi_card("Total Expenses", "💸", f"${total_expense:,.0f}", COLORS["expenses"],
+                 f"{total_expense / total_revenue * 100:.0f}% of revenue" if total_revenue else "—",
+                 d_exp[1]),
+        unsafe_allow_html=True,
+    )
+with k3:
+    st.markdown(
+        kpi_card("Net Profit", "📈", f"${net_profit:,.0f}", COLORS["profit"],
+                 "after labor, materials, overhead", d_pro[1]),
+        unsafe_allow_html=True,
+    )
+with k4:
+    st.markdown(
+        kpi_card("Overall Margin", "🎯", f"{overall_margin:.1f}%", COLORS["margin"],
+                 "net profit ÷ revenue", d_mar[1]),
+        unsafe_allow_html=True,
+    )
 
 # ------------------------------------------------- profitability by job type
-st.markdown('<div class="section-title">Profitability by Job Type</div>', unsafe_allow_html=True)
+st.markdown(
+    '<div class="section-title"><span class="num">01</span>Profitability by Job Type</div>',
+    unsafe_allow_html=True,
+)
 
 by_type = (
     filtered.groupby("job_type")
@@ -157,12 +327,15 @@ by_type = (
 type_order = by_type["job_type"].tolist()
 fig = go.Figure()
 fig.add_bar(name="Revenue", x=type_order, y=by_type["revenue"],
-            marker_color=COLORS["revenue"], hovertemplate="$%{y:,.0f}<extra></extra>")
+            marker=dict(color=COLORS["revenue"], line=dict(width=0), borderradius=6),
+            hovertemplate="$%{y:,.0f}<extra></extra>")
 fig.add_bar(name="Expenses", x=type_order, y=by_type["expenses"],
-            marker_color=COLORS["expenses"], hovertemplate="$%{y:,.0f}<extra></extra>")
+            marker=dict(color=COLORS["expenses"], line=dict(width=0), borderradius=6),
+            hovertemplate="$%{y:,.0f}<extra></extra>")
 fig.add_bar(name="Net Profit", x=type_order, y=by_type["net_profit"],
-            marker_color=COLORS["profit"], hovertemplate="$%{y:,.0f}<extra></extra>")
-fig.update_layout(barmode="group")
+            marker=dict(color=COLORS["profit"], line=dict(width=0), borderradius=6),
+            hovertemplate="$%{y:,.0f}<extra></extra>")
+fig.update_layout(barmode="group", bargap=0.28, hovermode="x unified")
 fig.update_yaxes(tickprefix="$")
 st.plotly_chart(style_fig(fig), use_container_width=True, config={"displayModeBar": False})
 
@@ -179,7 +352,10 @@ st.dataframe(type_display, use_container_width=True, column_config={
 })
 
 # ------------------------------------------- labor vs revenue efficiency/month
-st.markdown('<div class="section-title">Labor Cost vs. Revenue by Month</div>', unsafe_allow_html=True)
+st.markdown(
+    '<div class="section-title"><span class="num">02</span>Labor Cost vs. Revenue by Month</div>',
+    unsafe_allow_html=True,
+)
 
 monthly = (
     filtered.groupby(["month", "month_label"], as_index=False)
@@ -190,13 +366,17 @@ monthly["labor_pct"] = monthly["labor_cost"] / monthly["revenue"] * 100
 
 fig = make_subplots(specs=[[{"secondary_y": True}]])
 fig.add_bar(name="Revenue", x=monthly["month_label"], y=monthly["revenue"],
-            marker_color=COLORS["revenue"], hovertemplate="$%{y:,.0f}<extra></extra>")
+            marker=dict(color=COLORS["revenue"], line=dict(width=0), borderradius=6),
+            hovertemplate="$%{y:,.0f}<extra></extra>")
 fig.add_bar(name="Labor Cost", x=monthly["month_label"], y=monthly["labor_cost"],
-            marker_color=COLORS["labor"], hovertemplate="$%{y:,.0f}<extra></extra>")
+            marker=dict(color=COLORS["labor"], line=dict(width=0), borderradius=6),
+            hovertemplate="$%{y:,.0f}<extra></extra>")
 fig.add_scatter(
     name="Labor % of Revenue", x=monthly["month_label"], y=monthly["labor_pct"],
-    mode="lines+markers", line=dict(color="#FBBF24", width=3),
-    marker=dict(size=8), hovertemplate="%{y:.1f}%<extra></extra>",
+    mode="lines+markers",
+    line=dict(color="#FBBF24", width=3.5, shape="spline", smoothing=0.6),
+    marker=dict(size=9, color="#FBBF24", line=dict(color="#0B0F17", width=2)),
+    hovertemplate="%{y:.1f}%<extra></extra>",
     secondary_y=True,
 )
 fig.update_yaxes(title_text="USD", tickprefix="$", secondary_y=False)
@@ -204,7 +384,10 @@ fig.update_yaxes(title_text="Labor % of Revenue", ticksuffix="%", secondary_y=Tr
 st.plotly_chart(style_fig(fig), use_container_width=True, config={"displayModeBar": False})
 
 # ------------------------------------------------------------- top / bottom clients
-st.markdown('<div class="section-title">Client Profitability — Top & Bottom 5</div>', unsafe_allow_html=True)
+st.markdown(
+    '<div class="section-title"><span class="num">03</span>Client Profitability — Top & Bottom 5</div>',
+    unsafe_allow_html=True,
+)
 
 by_client = (
     filtered.groupby("client_name")
@@ -254,3 +437,9 @@ with st.expander(f"🔎 All jobs ({len(filtered)})"):
     })
     all_jobs["Date"] = all_jobs["Date"].dt.strftime("%Y-%m-%d")
     st.dataframe(all_jobs.set_index("Date"), use_container_width=True)
+
+st.markdown(
+    f'<div class="footer">All metrics computed live from business_intel.db at render time — '
+    f"nothing hardcoded • margin floor configurable in the sidebar</div>",
+    unsafe_allow_html=True,
+)
